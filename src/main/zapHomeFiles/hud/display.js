@@ -4,7 +4,7 @@ var tabId = '';
 var frameId = '';
 var context = {
 	url: document.referrer,
-	domain: parseDomainFromUrl(document.referrer)
+	domain: utils.parseDomainFromUrl(document.referrer)
 };
 
 // Event dispatcher for Vue
@@ -390,7 +390,7 @@ Vue.component('history-message-modal', {
 		replayInBrowser: function() {
 			let self = this;
 			let message = this.request;
-			zapApiCall("/hud/action/recordRequest/?header=" + encodeURIComponent(message.header) + "&body=" + encodeURIComponent(message.body))
+			utils.zapApiCall("/hud/action/recordRequest/?header=" + encodeURIComponent(message.header) + "&body=" + encodeURIComponent(message.body))
 			.then(response => response.json())
 			.then(json => {
 				if (json.requestUrl) {
@@ -399,7 +399,7 @@ Vue.component('history-message-modal', {
 					self.errors = I18n.t("error_invalid_html_header");
 				}
 			})
-			.catch(errorHandler)
+			.catch(utils.errorHandler)
 		}
 	},
 	data() {
@@ -455,7 +455,7 @@ Vue.component('site-tree-node', {
 	    showChildren: function () {
 	      this.addChild(I18n.t("sites_children_loading"), false);
 			var treeNode = this;
-			zapApiCall("/core/view/childNodes/?url=" + this.model.url)
+			utils.zapApiCall("/core/view/childNodes/?url=" + this.model.url)
 			.then(response => {
 
 				response.json().
@@ -467,9 +467,9 @@ Vue.component('site-tree-node', {
 							treeNode.addChild(child.name, child.method, child.isLeaf, child.hrefId);
 						} 
 					})
-					.catch(errorHandler);
+					.catch(utils.errorHandler);
 			})
-			.catch(errorHandler);
+			.catch(utils.errorHandler);
 	    },
 	    addChild: function (name, method, isLeaf, hrefId) {
 	      if (name.slice(-1) == '/') {
@@ -741,6 +741,10 @@ navigator.serviceWorker.addEventListener("message", event => {
 			showDisplayFrame();
 			break;
 
+		case "showHtmlReport":
+			utils.zapApiNewWindow('/core/other/htmlreport');
+			break;
+			
 		case "closeModals":
 			if (config && config.notTabId != tabId) {
 				eventBus.$emit('closeAllModals', {
@@ -756,7 +760,7 @@ navigator.serviceWorker.addEventListener("message", event => {
 
 /* the injected script makes the main frame visible */
 function showDisplayFrame() {
-	return messageWindow(parent, {action: "showMainDisplay"}, document.referrer);
+	return utils.messageWindow(parent, {action: "showMainDisplay"}, document.referrer);
 }
 
 /* the injected script makes the main frame invisible */
