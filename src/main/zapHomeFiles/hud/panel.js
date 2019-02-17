@@ -36,7 +36,10 @@ Vue.component('hud-button', {
 			isActive: false,
 			isDisabled: false,
 			isClosed: true,
-			direction: 'ltr'
+			direction: 'ltr',
+			isMenuShown: false,
+			isInMenu: false,
+			isOverButton:false
 		}
 	},
 	computed: {
@@ -60,7 +63,34 @@ Vue.component('hud-button', {
 			event.preventDefault();
 			navigator.serviceWorker.controller.postMessage({action: "buttonMenuClicked", tool: this.name, frameId: frameId, tabId: tabId});
 		},
+		toggleShowMenu() {
+			this.isMenuShown = true;
+			this.isInMenu = true;
+			this.labelmarginleft = '2rem';
+			this.labelmarginright = '2rem';
+			console.log('show menu');
+		},
+		leaveMenuButton() {
+			if (!this.isInMenu) {
+				this.isMenuShown = false;
+				console.log('Leave menu: menu closed')
+			}
+		},
+		enterMenu() {
+			this.isInMenu = true;
+			this.isMenuShown = true;
+			console.log('in menu')
+		},
+		leaveMenu() {
+			this.isInMenu = false;
+			this.isMenuShown = false;
+			if (!this.isOverButton) {
+				this.isActive = false;
+				console.log('menu closed')
+			}
+		},
 		mouseOver() {
+			this.isOverButton = true;
 			this.labelmarginleft = this.marginleft;
 			this.labelmarginright = this.marginright;
 			this.isActive = true;
@@ -68,9 +98,10 @@ Vue.component('hud-button', {
 			expandPanel();
 		},
 		mouseLeave() {
-			this.labelmarginleft = '0rem';
-			this.labelmarginright = '0rem';
-			this.isActive = false;
+			this.isOverButton = false;
+			if (!this.isMenuShown) {
+				this.isActive = false;
+			}
 		},
 		transitionEnd() {
 			let areAllButtonsClosed = true;
@@ -86,6 +117,8 @@ Vue.component('hud-button', {
 			})
 
 			if (areAllButtonsClosed) {
+				this.labelmarginleft = '0rem';
+				this.labelmarginright = '0rem';
 				contractPanel();
 			}
 		}

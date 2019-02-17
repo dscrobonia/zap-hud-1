@@ -2288,6 +2288,12 @@ html {
     border-bottom-right-radius: .1rem;
   }
     
+  .hud-button-wrapper {
+    min-width: 26px;
+    max-width: 100%;
+    clear: both;
+  }
+  
   .hud-button {
     align-items: center;
     background: #f0f1f4;
@@ -2344,11 +2350,53 @@ html {
     margin-left: -.20rem;
     margin-right: -.20rem;
   }
-  
+
+  .hud-menu-wrapper {
+    position: relative;
+    width: 0;
+    height: 0;
+  }
+
+  .hud-menu {
+    position: absolute;
+    top: 0rem;
+    left: 75px;
+  }
+
+  .hud-menu-buffer {
+    height: .5rem;
+  }
+ 
+  .hud-menu-list {
+    max-height: 0rem;
+    max-width: 0rem;
+    /*direction: rtl;*/
+    white-space: nowrap;
+    overflow: hidden;
+    background: #e4e4f8;
+    color: #667189;;
+    font-size: 90%;
+    line-height: .8rem;
+    transition-property: max-height; 
+    transition-duration: .5s;
+  }
+
+  .hud-menu-list.menu-shown {
+    max-height: 5rem;
+    max-width: 10rem;
+    border: 1px solid #a1a1a1;
+    border-top: 0;
+    overflow: visible;
+  }
+ 
   .hud-http-message {
     font-family: sans-serif;
     font-size: 12px;
     font-family: "Courier New", Courier, monospace;
+  }
+
+  iframe {
+    border: 1px dashed red;
   }
 
   .chip {

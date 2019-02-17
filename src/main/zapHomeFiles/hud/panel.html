@@ -1,6 +1,7 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="<<ZAP_HUD_FILES>>?name=libraries/spectre.css"/>
+	<link rel="stylesheet" type="text/css" href="<<ZAP_HUD_FILES>>?name=libraries/spectre-icons.css"/>
 	<link rel="stylesheet" type="text/css" href="<<ZAP_HUD_FILES>>?name=panel.css&amp;orientation=ORIENTATION" />
 
 	<script type="text/javascript" src="<<ZAP_HUD_FILES>>?name=libraries/localforage.min.js"></script>
@@ -21,10 +22,27 @@
 	</template>
 
 	<template id="hud-button-template">
+		<div class="hud-button-wrapper">
 		<div :class="{'hud-button': true, 'small': isSmall, 'active': isActive, 'disabled': isDisabled}" :style="{'float': orientation, 'direction': direction}" @click="selectButton" @contextmenu="showContextMenu" @mouseover="mouseOver" @mouseleave="mouseLeave">
 			<img :src="currentIcon" :style="{'float': orientation}">
 			<span id="data" v-show="showData" :style="{'float': orientation, 'margin-left': marginleft, 'margin-right': marginright}">{{currentData}}</span>
-			<span id="label" @transitionend="transitionEnd" :style="{'float': orientation, 'margin-left': labelmarginleft, 'margin-right': labelmarginright}">{{label}}</span>
+			<span id="label" @transitionend="transitionEnd" :style="{'float': orientation, 'margin-left': labelmarginleft, 'margin-right': labelmarginright}">{{label}}
+					<i :class="{ 'icon': true, 'font-size': true, 'icon-arrow-right': !isMenuShown, 'icon-arrow-down': isMenuShown }" @mouseover="toggleShowMenu" @mouseleave="leaveMenuButton"></i>
+			</span>
+		</div>
+		<div class="hud-menu-wrapper">
+			<div class="hud-menu" @mouseover="enterMenu" @mouseleave="leaveMenu"> 
+				<div class="hud-menu-buffer">
+
+				</div>
+				<div id="menu" :class="{'hud-menu-list': true, 'menu-shown': isMenuShown}" >
+						<ul>
+							<li>item 1</li>
+							<li>item 2</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</template>
 </body>
