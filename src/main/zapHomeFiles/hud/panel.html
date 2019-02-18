@@ -23,23 +23,23 @@
 
 	<template id="hud-button-template">
 		<div class="hud-button-wrapper">
-		<div :class="{'hud-button': true, 'small': isSmall, 'active': isActive, 'disabled': isDisabled}" :style="{'float': orientation, 'direction': direction}" @click="selectButton" @contextmenu="showContextMenu" @mouseover="mouseOver" @mouseleave="mouseLeave">
+		<div :class="{'hud-button': true, 'small': isSmall, 'active': isActive, 'disabled': isDisabled}" :style="{'float': orientation, 'direction': direction}" @click="selectButton" @contextmenu="showContextMenu" @mouseenter="mouseEnter" @mouseover="mouseOver" @mouseleave="mouseLeave">
 			<img :src="currentIcon" :style="{'float': orientation}">
 			<span id="data" v-show="showData" :style="{'float': orientation, 'margin-left': marginleft, 'margin-right': marginright}">{{currentData}}</span>
-			<span id="label" @transitionend="transitionEnd" :style="{'float': orientation, 'margin-left': labelmarginleft, 'margin-right': labelmarginright}">{{label}}
-					<i :class="{ 'icon': true, 'font-size': true, 'icon-arrow-right': !isMenuShown, 'icon-arrow-down': isMenuShown }" @mouseover="toggleShowMenu" @mouseleave="leaveMenuButton"></i>
+			<span id="label" v-show="!isSmall" @transitionend="transitionEnd" :style="{'float': orientation, 'margin-left': labelmarginleft, 'margin-right': labelmarginright}">{{label}}
+				<i :style="{'z-index': 5, 'margin-left': iconmargin}" :class="{ 'icon': true, 'font-size': true, 'icon-arrow-right': !isMenuShown, 'icon-arrow-down': isMenuShown, 'hud-button-icon': true }" @mouseover="toggleShowMenu" @mouseleave="leaveMenuButton"></i>
 			</span>
-		</div>
-		<div class="hud-menu-wrapper">
-			<div class="hud-menu" @mouseover="enterMenu" @mouseleave="leaveMenu"> 
-				<div class="hud-menu-buffer">
-
-				</div>
-				<div id="menu" :class="{'hud-menu-list': true, 'menu-shown': isMenuShown}" >
-						<ul>
-							<li>item 1</li>
-							<li>item 2</li>
-						</ul>
+			<div class="hud-menu-wrapper">
+				<div class="hud-menu" :class="{'menu-shown': isMenuShown}" @transitionend="menuTransitionEnd" @mouseover="enterMenu" @mouseleave="leaveMenu"> 
+					<div class="hud-menu-buffer-top"></div>
+					<div :class="{'hud-menu-buffer-right': true, 'menu-shown': true}"></div>
+					<div :class="{'hud-menu-buffer-bottom': true, 'menu-shown': true}"></div>
+					<div id="menu" :class="{'hud-menu-list': true, 'menu-shown': isMenuShown}">
+							<ul class="hud-button-menu">
+								<li class="menu-item"><a href="#">View Scopes</a></li>
+								<li class="menu-item" @click="removeTool"><a href="#" style="border-radius: 0rem 0rem .5rem .5rem;">Remove Tool</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

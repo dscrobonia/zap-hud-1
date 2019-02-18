@@ -39,7 +39,9 @@ Vue.component('hud-button', {
 			direction: 'ltr',
 			isMenuShown: false,
 			isInMenu: false,
-			isOverButton:false
+			isOverButton:false,
+			iconmargin: '0rem',
+			isMenuClosed: true
 		}
 	},
 	computed: {
@@ -49,15 +51,17 @@ Vue.component('hud-button', {
 	},
 	methods: {
 		selectButton() {
-			navigator.serviceWorker.controller.postMessage({
-				action: 'buttonClicked',
-				buttonLabel: this.name,
-				tool: this.name,
-				domain: context.domain,
-				url: context.url,
-				panelKey: panelKey,
-				frameId: frameId,
-				tabId: tabId});
+			if (!this.isMenuShown) {
+				navigator.serviceWorker.controller.postMessage({
+					action: 'buttonClicked',
+					buttonLabel: this.name,
+					tool: this.name,
+					domain: context.domain,
+					url: context.url,
+					panelKey: panelKey,
+					frameId: frameId,
+					tabId: tabId});
+			}
 		},
 		showContextMenu(event) {
 			event.preventDefault();
@@ -66,41 +70,78 @@ Vue.component('hud-button', {
 		toggleShowMenu() {
 			this.isMenuShown = true;
 			this.isInMenu = true;
-			this.labelmarginleft = '2rem';
-			this.labelmarginright = '2rem';
+			
+			if (orientation === 'left') {
+				this.labelmarginleft = '1.5rem';
+			}
+			else {
+				this.labelmarginright = '1.5rem'
+			}
+
+			this.iconmargin = '1rem';
+			console.log(this.labelmarginleft)
+			console.log(this)
 			console.log('show menu');
 		},
 		leaveMenuButton() {
 			if (!this.isInMenu) {
+				/*
+				this.iconmargin = '0rem';
 				this.isMenuShown = false;
-				console.log('Leave menu: menu closed')
+				*/
+				console.log('Leave menu button')
 			}
 		},
 		enterMenu() {
 			this.isInMenu = true;
 			this.isMenuShown = true;
+			this.isMenuClosed = false;
 			console.log('in menu')
 		},
 		leaveMenu() {
+			console.log('leaving menut area')
 			this.isInMenu = false;
 			this.isMenuShown = false;
+
 			if (!this.isOverButton) {
-				this.isActive = false;
+				//this.isActive = false;
 				console.log('menu closed')
 			}
 		},
-		mouseOver() {
-			this.isOverButton = true;
+		menuTransitionEnd() {
+			console.log('menu transition end')
+			if (!this.isMenuShown) {
+				this.iconmargin = '0rem';
+				this.labelmarginleft = this.marginleft;
+				this.labelmarginright = this.marginright;
+				this.isMenuClosed = true;
+
+				if (!this.isOverButton) {
+					this.isActive = false;
+				}
+			}
+		},
+		mouseEnter() {
+			console.log('mouse enter')
 			this.labelmarginleft = this.marginleft;
 			this.labelmarginright = this.marginright;
+		},
+		mouseOver() {
+			console.log('mouseOver')
+			this.isOverButton = true;
 			this.isActive = true;
 			this.isClosed = false;
 			expandPanel();
 		},
 		mouseLeave() {
+			console.log('mouseleav')
 			this.isOverButton = false;
-			if (!this.isMenuShown) {
+
+			if (!this.isMenuShown && this.isMenuClosed) {
 				this.isActive = false;
+			}
+			else {
+				this.isMenuShown = false;
 			}
 		},
 		transitionEnd() {
@@ -108,6 +149,8 @@ Vue.component('hud-button', {
 
 			if (!this.isActive) {
 				this.isClosed = true;
+				this.labelmarginleft = '0rem';
+				this.labelmarginright = '0rem';
 			}
 
 			this.$parent.$children.forEach(child => {
@@ -117,10 +160,13 @@ Vue.component('hud-button', {
 			})
 
 			if (areAllButtonsClosed) {
-				this.labelmarginleft = '0rem';
-				this.labelmarginright = '0rem';
 				contractPanel();
 			}
+		},
+		removeTool(e) {
+			eventBus.$emit('removeButton', {
+				name: this.name
+			});
 		}
 	},
 	created() {
