@@ -40,13 +40,29 @@ Vue.component('hud-button', {
 			isMenuShown: false,
 			isInMenu: false,
 			isOverButton:false,
-			iconmargin: '0rem',
+			iconmarginleft: '0rem',
+			iconmarginright: '0rem',
 			isMenuClosed: true
 		}
 	},
 	computed: {
 		isSmall: function() {
 			return this.currentData == null;
+		},
+		isArrowRight: function() {
+			return !this.isMenuShown && this.orientation == 'left';
+		},
+		isArrowLeft: function() {
+			return !this.isMenuShown && this.orientation == 'right';
+		},
+		isArrowDown: function() {
+			return this.isMenuShown;
+		},
+		isLeft: function() {
+			return orientation == 'left';
+		},
+		isRight: function() {
+			return orientation == 'right';
 		}
 	},
 	methods: {
@@ -73,22 +89,16 @@ Vue.component('hud-button', {
 			
 			if (orientation === 'left') {
 				this.labelmarginleft = '1.5rem';
+				this.iconmarginleft = '1rem';
 			}
 			else {
 				this.labelmarginright = '1.5rem'
+				this.iconmarginright = '1rem';
 			}
 
-			this.iconmargin = '1rem';
-			console.log(this.labelmarginleft)
-			console.log(this)
-			console.log('show menu');
 		},
 		leaveMenuButton() {
 			if (!this.isInMenu) {
-				/*
-				this.iconmargin = '0rem';
-				this.isMenuShown = false;
-				*/
 				console.log('Leave menu button')
 			}
 		},
@@ -104,14 +114,14 @@ Vue.component('hud-button', {
 			this.isMenuShown = false;
 
 			if (!this.isOverButton) {
-				//this.isActive = false;
 				console.log('menu closed')
 			}
 		},
 		menuTransitionEnd() {
 			console.log('menu transition end')
 			if (!this.isMenuShown) {
-				this.iconmargin = '0rem';
+				this.iconmarginleft = '0rem';
+				this.iconmarginright = '0rem';
 				this.labelmarginleft = this.marginleft;
 				this.labelmarginright = this.marginright;
 				this.isMenuClosed = true;

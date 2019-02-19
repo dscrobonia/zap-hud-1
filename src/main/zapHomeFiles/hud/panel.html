@@ -27,14 +27,14 @@
 			<img :src="currentIcon" :style="{'float': orientation}">
 			<span id="data" v-show="showData" :style="{'float': orientation, 'margin-left': marginleft, 'margin-right': marginright}">{{currentData}}</span>
 			<span id="label" v-show="!isSmall" @transitionend="transitionEnd" :style="{'float': orientation, 'margin-left': labelmarginleft, 'margin-right': labelmarginright}">{{label}}
-				<i :style="{'z-index': 5, 'margin-left': iconmargin}" :class="{ 'icon': true, 'font-size': true, 'icon-arrow-right': !isMenuShown, 'icon-arrow-down': isMenuShown, 'hud-button-icon': true }" @mouseover="toggleShowMenu" @mouseleave="leaveMenuButton"></i>
+				<i :style="{'z-index': 5, 'margin-left': iconmarginleft, 'margin-right': iconmarginright}" :class="{ 'icon': true, 'font-size': true, 'icon-arrow-right': isArrowRight, 'icon-arrow-left': isArrowLeft, 'icon-arrow-down': isArrowDown, 'hud-button-icon': true }" @mouseover="toggleShowMenu" @mouseleave="leaveMenuButton"></i>
 			</span>
-			<div class="hud-menu-wrapper">
-				<div class="hud-menu" :class="{'menu-shown': isMenuShown}" @transitionend="menuTransitionEnd" @mouseover="enterMenu" @mouseleave="leaveMenu"> 
+			<div :class="{'hud-menu-wrapper': true, 'left-side': isLeft, 'right-side': isRight}">
+				<div class="hud-menu" :class="{'menu-shown': isMenuShown, 'left-side': isLeft, 'right-side': isRight}" @transitionend="menuTransitionEnd" @mouseover="enterMenu" @mouseleave="leaveMenu"> 
 					<div class="hud-menu-buffer-top"></div>
-					<div :class="{'hud-menu-buffer-right': true, 'menu-shown': true}"></div>
-					<div :class="{'hud-menu-buffer-bottom': true, 'menu-shown': true}"></div>
-					<div id="menu" :class="{'hud-menu-list': true, 'menu-shown': isMenuShown}">
+					<div :class="{'hud-menu-buffer-left': isRight, 'hud-menu-buffer-right': isLeft, 'menu-shown': true}"></div>
+					<div :class="{'hud-menu-buffer-bottom': true, 'menu-shown': true, 'left-side': isLeft, 'right-side': isRight}"></div>
+					<div id="menu" :class="{'hud-menu-list': true, 'menu-shown': isMenuShown, 'left-side': isLeft, 'right-side': isRight}">
 							<ul class="hud-button-menu">
 								<li class="menu-item"><a href="#">View Scopes</a></li>
 								<li class="menu-item" @click="removeTool"><a href="#" style="border-radius: 0rem 0rem .5rem .5rem;">Remove Tool</a></li>
